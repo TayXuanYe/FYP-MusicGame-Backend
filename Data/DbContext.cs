@@ -1,0 +1,16 @@
+using Microsoft.EntityFrameworkCore;
+using FYP_MusicGame_Backend.Models;
+
+namespace FYP_MusicGame_Backend.Data
+{
+    public class DbContext : Microsoft.EntityFrameworkCore.DbContext
+    {
+        public DbContext(DbContextOptions<DbContext> options) : base(options) { }
+
+        public DbSet<Song> Songs { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<GameHistory> GameHistories { get; set; }
+        public DbSet<UserGameSetting> UserGameSetting { get; set; }
+        public DbSet<Chart> Charts { get; set; }
+    }
+}

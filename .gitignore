@@ -15,5 +15,3 @@ appsettings.Production.json
 appsettings.json
 
 Logs/
-
-Database/*.db
