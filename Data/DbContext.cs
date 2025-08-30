@@ -12,5 +12,20 @@ namespace FYP_MusicGame_Backend.Data
         public DbSet<GameHistory> GameHistories { get; set; }
         public DbSet<UserGameSetting> UserGameSetting { get; set; }
         public DbSet<Chart> Charts { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Song>()
+                .Property(p => p.UploadedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder.Entity<User>()
+                .Property(p => p.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder.Entity<Chart>()
+                .Property(p => p.UploadedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+        }
     }
 }
