@@ -11,3 +11,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 // configuring database context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+var app = builder.Build();
