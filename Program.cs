@@ -1,3 +1,5 @@
+// Program.cs
+
 using FYP_MusicGame_Backend.Data;
 using Microsoft.EntityFrameworkCore;
 
