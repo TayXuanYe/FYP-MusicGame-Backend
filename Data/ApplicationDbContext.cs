@@ -3,9 +3,9 @@ using FYP_MusicGame_Backend.Models;
 
 namespace FYP_MusicGame_Backend.Data
 {
-    public class DbContext : Microsoft.EntityFrameworkCore.DbContext
+    public class ApplicationDbContext : DbContext
     {
-        public DbContext(DbContextOptions<DbContext> options) : base(options) { }
+        public ApplicationDbContext(DbContextOptions<DbContext> options) : base(options) { }
 
         public DbSet<Song> Songs { get; set; }
         public DbSet<User> Users { get; set; }
