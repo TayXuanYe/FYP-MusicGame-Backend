@@ -203,8 +203,6 @@ public class UserService : IUserService
 
     public async Task<Result<UserLoginResponseDto>> AuthenticateUserAsync(string username, string password)
     {
-        string hashPassword = BCrypt.Net.BCrypt.HashPassword(username);
-
         var user = await _userRepository.GetUserByUsernameAsync(username);
 
         if (user == null)
@@ -212,7 +210,7 @@ public class UserService : IUserService
             return Result<UserLoginResponseDto>.Failure("User not found.");
         }
 
-        if (!Equals(hashPassword, user.PasswordHash))
+        if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
         {
             return Result<UserLoginResponseDto>.Failure("Password incorrect.");
         }
