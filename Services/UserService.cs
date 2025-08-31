@@ -103,7 +103,7 @@ public class UserService : IUserService
             Username = newUser.Username,
             Email = newUser.Email,
             IsLogin = true,
-            Token = jwtToken
+            AuthToken = jwtToken
         };
         return Result<UserLoginResponseDto>.Success(newUserDto);
     }
@@ -202,7 +202,7 @@ public class UserService : IUserService
             Username = user.Username,
             Email = user.Email,
             IsLogin = true,
-            Token = jwtToken
+            AuthToken = jwtToken
         };
 
         return Result<UserLoginResponseDto>.Success(userDto);
