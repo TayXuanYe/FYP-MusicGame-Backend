@@ -15,4 +15,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
+// Add controllers services
+builder.Services.AddControllers();
 var app = builder.Build();
+app.MapControllers();
+
+app.Run();

@@ -22,7 +22,7 @@ public class UsersController : ControllerBase
         return Ok(users);
     }
 
-    [HttpGet("{id:int}")]
+    [HttpGet("{id}")]
     [Authorize]
     public async Task<IActionResult> GetUserById(int id)
     {
@@ -34,11 +34,11 @@ public class UsersController : ControllerBase
         return Ok(user);
     }
 
-    [HttpGet("{username:string}")]
+    [HttpGet("by-username/{username}")]
     [Authorize]
-    public async Task<IActionResult> GetUserByUsername(string name)
+    public async Task<IActionResult> GetUserByUsername(string username)
     {
-        var user = await _userService.GetUserByUsernameAsync(name);
+        var user = await _userService.GetUserByUsernameAsync(username);
         if (user == null)
         {
             return NotFound();
@@ -70,9 +70,9 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDto userDto)
     {
         var updateResult = await _userService.UpdateUserAsync(userDto);
-        if (updateResult.IsSuccess)
+        if (!updateResult.IsSuccess)
         {
-            if (String.Equals(updateResult.ErrorMessage, "User not found."))
+            if (Equals(updateResult.ErrorMessage, "User not found."))
             {
                 return NotFound();
             }
