@@ -46,7 +46,7 @@ public class UsersController : ControllerBase
         return Ok(user);
     }
 
-    [HttpPost("create-user")]
+    [HttpPost("register")]
     public async Task<IActionResult> CreateUser([FromBody] UserDto userDto)
     {
         try
