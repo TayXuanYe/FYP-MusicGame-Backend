@@ -26,6 +26,18 @@ namespace FYP_MusicGame_Backend.Data
                 .Property(p => p.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+            modelBuilder.Entity<User>()
+                .Property(p => p.IsAdmin)
+                .HasDefaultValue(false);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Username)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
             modelBuilder.Entity<Chart>()
                 .Property(p => p.UploadedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
