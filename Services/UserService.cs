@@ -147,7 +147,7 @@ public class UserService : IUserService
         }
 
         string emailPattern = @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
-        if (Regex.IsMatch(email, emailPattern))
+        if (!Regex.IsMatch(email, emailPattern))
         {
             return (false, "Invalid email format.");
         }
