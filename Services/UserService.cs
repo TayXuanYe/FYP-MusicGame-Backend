@@ -172,7 +172,7 @@ public class UserService : IUserService
         }
 
         var user = await GetUserByUsernameAsync(username);
-        if (user == null)
+        if (user != null)
         {
             return (false, "Username already exists.");
         }
@@ -194,7 +194,7 @@ public class UserService : IUserService
         }
 
         var getEmailResult = await GetUserByEmailAsync(email);
-        if (getEmailResult == null)
+        if (getEmailResult != null)
         {
             return (false, "Email already exists.");
         }
