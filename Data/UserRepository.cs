@@ -23,9 +23,14 @@ public class UserRepository : IUserRepository
         return await _dbContext.Users.FindAsync(id);
     }
 
-    public async Task<User?> GetUserByUsernameAsync(String name)
+    public async Task<User?> GetUserByUsernameAsync(string name)
     {
         return await _dbContext.Users.FirstOrDefaultAsync(u => string.Equals(u.Username, name));
+    }
+
+    public async Task<User?> GetUserByEmailAsync(string email)
+    {
+        return await _dbContext.Users.FirstOrDefaultAsync(u => string.Equals(u.Email, email));
     }
 
     public async Task AddUserAsync(User user)
