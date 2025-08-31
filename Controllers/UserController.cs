@@ -47,7 +47,6 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> CreateUser([FromBody] UserDto userDto)
     {
         try

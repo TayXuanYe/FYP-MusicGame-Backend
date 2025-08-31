@@ -12,44 +12,83 @@ public class UserService : IUserService
         _userRepository = userRepository;
     }
 
-    public Task<IEnumerable<User>> GetAllUsersAsync()
+    public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
     {
-        return _userRepository.GetAllUsersAsync();
+        var users = await _userRepository.GetAllUsersAsync();
+        
+        var userDtos = users.Select(user => new UserDto
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email
+        }).ToList();
+
+        return userDtos;
     }
 
-    public Task<User?> GetUserByIdAsync(int id)
+    public async Task<UserDto?> GetUserByIdAsync(int id)
     {
-        return _userRepository.GetUserByIdAsync(id);
+        var user = await _userRepository.GetUserByIdAsync(id);
+        
+        if (user == null)
+        {
+            return null;
+        }
+
+        return new UserDto
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email
+        };
     }
 
-    public Task<User?> GetUserByUsernameAsync(string username)
+    public async Task<UserDto?> GetUserByUsernameAsync(string username)
     {
-        return _userRepository.GetUserByUsernameAsync(username);
+        var user = await _userRepository.GetUserByUsernameAsync(username);
+
+        if (user == null)
+        {
+            return null;
+        }
+
+        return new UserDto
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email
+        };
     }
 
-    public async Task<Result<User>> CreateUserAsync(UserDto userDto)
+    public async Task<Result<UserDto>> CreateUserAsync(UserDto userDto)
     {
         var usernameValidateResult = ValidateUsername(userDto.Username);
         if (!usernameValidateResult.isValid)
         {
-            return Result<User>.Failure(usernameValidateResult.errorMessage);
+            return Result<UserDto>.Failure(usernameValidateResult.errorMessage);
         }
 
         var emailValidateResult = ValidateUserEmail(userDto.Email);
         if (!emailValidateResult.isValid)
         {
-            return Result<User>.Failure(emailValidateResult.errorMessage);
+            return Result<UserDto>.Failure(emailValidateResult.errorMessage);
         }
 
         var newUser = new User
         {
             Username = userDto.Username,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password),
-            Email = userDto.Email
+            Email = userDto.Email,
         };
 
         await _userRepository.AddUserAsync(newUser);
-        return Result<User>.Success(newUser);
+        var newUserDto = new UserDto
+        {
+            Username = newUser.Username,
+            Email = newUser.Email,
+            IsLogin = true
+        };
+        return Result<UserDto>.Success(newUserDto);
     }
 
     public async Task<Result<bool>> UpdateUserAsync(UserDto userDto)
