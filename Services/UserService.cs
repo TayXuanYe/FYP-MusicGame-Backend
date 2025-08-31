@@ -4,6 +4,7 @@ using FYP_MusicGame_Backend.Models;
 using System.Text.RegularExpressions;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 public class UserService : IUserService
 {
@@ -105,19 +106,17 @@ public class UserService : IUserService
         // add user
         await _userRepository.AddUserAsync(newUser);
 
-        // get new add user
-        var newUserGet = await _userRepository.GetUserByUsernameAsync(newUser.Username);
-
         // spawn jwt token
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, newUserGet!.Username),
-            new Claim(ClaimTypes.NameIdentifier, newUserGet.Id.ToString())
+            new Claim(ClaimTypes.Name, newUser!.Username),
+            new Claim(ClaimTypes.NameIdentifier, newUser.Id.ToString())
         };
         var jwtToken = _tokenService.GenerateJwtToken(claims);
 
         var newUserDto = new UserLoginResponseDto
         {
+            Id = newUser.Id,
             Username = newUser.Username,
             Email = newUser.Email,
             IsLogin = true,
