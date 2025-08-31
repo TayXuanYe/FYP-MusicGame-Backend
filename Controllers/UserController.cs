@@ -46,7 +46,7 @@ public class UsersController : ControllerBase
         return Ok(user);
     }
 
-    [HttpPost]
+    [HttpPost("create-user")]
     public async Task<IActionResult> CreateUser([FromBody] UserDto userDto)
     {
         try
@@ -63,6 +63,19 @@ public class UsersController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] UserLoginDto loginDto)
+    {
+        var authResult = await _userService.AuthenticateUserAsync(loginDto.Username, loginDto.Password);
+
+        if (!authResult.IsSuccess)
+        {
+            return Unauthorized(authResult.ErrorMessage);
+        }
+
+        return Ok(authResult.Value);
     }
     
     [HttpPut("{id}")]

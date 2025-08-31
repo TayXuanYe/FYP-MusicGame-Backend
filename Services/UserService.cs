@@ -2,20 +2,22 @@
 
 using FYP_MusicGame_Backend.Models;
 using System.Text.RegularExpressions;
+using System.Security.Claims;
 
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
-
-    public UserService(IUserRepository userRepository)
+    private readonly ITokenService _tokenService;
+    public UserService(IUserRepository userRepository, ITokenService tokenService)
     {
         _userRepository = userRepository;
+        _tokenService = tokenService;
     }
 
     public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
     {
         var users = await _userRepository.GetAllUsersAsync();
-        
+
         var userDtos = users.Select(user => new UserDto
         {
             Id = user.Id,
@@ -29,7 +31,7 @@ public class UserService : IUserService
     public async Task<UserDto?> GetUserByIdAsync(int id)
     {
         var user = await _userRepository.GetUserByIdAsync(id);
-        
+
         if (user == null)
         {
             return null;
@@ -60,18 +62,19 @@ public class UserService : IUserService
         };
     }
 
-    public async Task<Result<UserDto>> CreateUserAsync(UserDto userDto)
+    public async Task<Result<UserLoginResponseDto>> CreateUserAsync(UserDto userDto)
     {
+        // validate input
         var usernameValidateResult = ValidateUsername(userDto.Username);
         if (!usernameValidateResult.isValid)
         {
-            return Result<UserDto>.Failure(usernameValidateResult.errorMessage);
+            return Result<UserLoginResponseDto>.Failure(usernameValidateResult.errorMessage);
         }
 
         var emailValidateResult = ValidateUserEmail(userDto.Email);
         if (!emailValidateResult.isValid)
         {
-            return Result<UserDto>.Failure(emailValidateResult.errorMessage);
+            return Result<UserLoginResponseDto>.Failure(emailValidateResult.errorMessage);
         }
 
         var newUser = new User
@@ -81,14 +84,28 @@ public class UserService : IUserService
             Email = userDto.Email,
         };
 
+        // add user
         await _userRepository.AddUserAsync(newUser);
-        var newUserDto = new UserDto
+
+        // get new add user
+        var newUserGet = await _userRepository.GetUserByUsernameAsync(newUser.Username);
+
+        // spawn jwt token
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, newUserGet!.Username),
+            new Claim(ClaimTypes.NameIdentifier, newUserGet.Id.ToString())
+        };
+        var jwtToken = _tokenService.GenerateJwtToken(claims);
+
+        var newUserDto = new UserLoginResponseDto
         {
             Username = newUser.Username,
             Email = newUser.Email,
-            IsLogin = true
+            IsLogin = true,
+            Token = jwtToken
         };
-        return Result<UserDto>.Success(newUserDto);
+        return Result<UserLoginResponseDto>.Success(newUserDto);
     }
 
     public async Task<Result<bool>> UpdateUserAsync(UserDto userDto)
@@ -107,7 +124,7 @@ public class UserService : IUserService
         }
 
         var emailValidateResult = ValidateUserEmail(userDto.Email);
-        if(!emailValidateResult.isValid)
+        if (!emailValidateResult.isValid)
         {
             return Result<bool>.Failure(emailValidateResult.errorMessage);
         }
@@ -153,5 +170,41 @@ public class UserService : IUserService
         }
 
         return (true, "");
+    }
+
+    public async Task<Result<UserLoginResponseDto>> AuthenticateUserAsync(string username, string password)
+    {
+        string hashPassword = BCrypt.Net.BCrypt.HashPassword(username);
+
+        var user = await _userRepository.GetUserByUsernameAsync(username);
+
+        if (user == null)
+        {
+            return Result<UserLoginResponseDto>.Failure("User not found.");
+        }
+
+        if (!Equals(hashPassword, user.PasswordHash))
+        {
+            return Result<UserLoginResponseDto>.Failure("Password incorrect.");
+        }
+
+        // spawn jwt token
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+        };
+        var jwtToken = _tokenService.GenerateJwtToken(claims);
+
+        var userDto = new UserLoginResponseDto
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email,
+            IsLogin = true,
+            Token = jwtToken
+        };
+
+        return Result<UserLoginResponseDto>.Success(userDto);
     }
 }

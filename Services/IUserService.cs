@@ -6,7 +6,8 @@ public interface IUserService
     Task<IEnumerable<UserDto>> GetAllUsersAsync();
     Task<UserDto?> GetUserByIdAsync(int id);
     Task<UserDto?> GetUserByUsernameAsync(string name);
-    Task<Result<UserDto>> CreateUserAsync(UserDto userDto);
+    Task<Result<UserLoginResponseDto>> CreateUserAsync(UserDto userDto);
     Task<Result<bool>> UpdateUserAsync(UserDto userDto);
     Task<Result<bool>> DeleteUserAsync(int id);
+    Task<Result<UserLoginResponseDto>> AuthenticateUserAsync(string username, string password);
 }
