@@ -3,6 +3,7 @@
 using FYP_MusicGame_Backend.Models;
 using System.Text.RegularExpressions;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 public class UserService : IUserService
 {
@@ -62,16 +63,33 @@ public class UserService : IUserService
         };
     }
 
+    public async Task<UserDto?> GetUserByEmailAsync(string email)
+    {
+        var user = await _userRepository.GetUserByEmailAsync(email);
+
+        if (user == null)
+        {
+            return null;
+        }
+
+        return new UserDto
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email
+        };
+    }
+
     public async Task<Result<UserLoginResponseDto>> CreateUserAsync(UserDto userDto)
     {
         // validate input
-        var usernameValidateResult = ValidateUsername(userDto.Username);
+        var usernameValidateResult = await ValidateUsernameAsync(userDto.Username);
         if (!usernameValidateResult.isValid)
         {
             return Result<UserLoginResponseDto>.Failure(usernameValidateResult.errorMessage);
         }
 
-        var emailValidateResult = ValidateUserEmail(userDto.Email);
+        var emailValidateResult = await ValidateUserEmailAsync(userDto.Email);
         if (!emailValidateResult.isValid)
         {
             return Result<UserLoginResponseDto>.Failure(emailValidateResult.errorMessage);
@@ -117,13 +135,13 @@ public class UserService : IUserService
             return Result<bool>.Failure("User not found.");
         }
 
-        var usernameValidateResult = ValidateUsername(userDto.Username);
+        var usernameValidateResult = await ValidateUsernameAsync(userDto.Username);
         if (!usernameValidateResult.isValid)
         {
             return Result<bool>.Failure(usernameValidateResult.errorMessage);
         }
 
-        var emailValidateResult = ValidateUserEmail(userDto.Email);
+        var emailValidateResult = await ValidateUserEmailAsync(userDto.Email);
         if (!emailValidateResult.isValid)
         {
             return Result<bool>.Failure(emailValidateResult.errorMessage);
@@ -146,17 +164,23 @@ public class UserService : IUserService
         return Result<bool>.Success(true);
     }
 
-    private (bool isValid, string errorMessage) ValidateUsername(string username)
+    private async Task<(bool isValid, string errorMessage)> ValidateUsernameAsync(string username)
     {
         if (string.IsNullOrEmpty(username))
         {
             return (false, "Username are required.");
         }
 
+        var user = await GetUserByUsernameAsync(username);
+        if (user == null)
+        {
+            return (false, "Username already exists.");
+        }
+
         return (true, "");
     }
 
-    private (bool isValid, string errorMessage) ValidateUserEmail(string email)
+    private async Task<(bool isValid, string errorMessage)> ValidateUserEmailAsync(string email)
     {
         if (string.IsNullOrEmpty(email))
         {
@@ -167,6 +191,12 @@ public class UserService : IUserService
         if (!Regex.IsMatch(email, emailPattern))
         {
             return (false, "Invalid email format.");
+        }
+
+        var getEmailResult = await GetUserByEmailAsync(email);
+        if (getEmailResult == null)
+        {
+            return (false, "Email already exists.");
         }
 
         return (true, "");
