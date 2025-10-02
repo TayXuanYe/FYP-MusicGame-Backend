@@ -234,4 +234,44 @@ public class UserService : IUserService
 
         return Result<UserLoginResponseDto>.Success(userDto);
     }
+
+    public async Task<Result<UserLoginResponseDto>> AuthenticateAdminAsync(string username, string password)
+    {
+        var user = await _userRepository.GetUserByUsernameAsync(username);
+
+        if (user == null)
+        {
+            return Result<UserLoginResponseDto>.Failure("User not found.");
+        }
+
+        if (!user.IsAdmin)
+        {
+            return Result<UserLoginResponseDto>.Failure("User is not an admin.");
+        }
+
+        if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+        {
+            return Result<UserLoginResponseDto>.Failure("Password incorrect.");
+        }
+
+        // spawn jwt token with admin role
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Role, "Admin")
+        };
+        var jwtToken = _tokenService.GenerateJwtToken(claims);
+
+        var userDto = new UserLoginResponseDto
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email,
+            IsLogin = true,
+            AuthToken = jwtToken
+        };
+
+        return Result<UserLoginResponseDto>.Success(userDto);
+    }
 }

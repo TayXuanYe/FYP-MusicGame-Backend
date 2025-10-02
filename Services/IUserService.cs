@@ -11,4 +11,5 @@ public interface IUserService
     Task<Result<bool>> UpdateUserAsync(UserDto userDto);
     Task<Result<bool>> DeleteUserAsync(int id);
     Task<Result<UserLoginResponseDto>> AuthenticateUserAsync(string username, string password);
+    Task<Result<UserLoginResponseDto>> AuthenticateAdminAsync(string username, string password);
 }
