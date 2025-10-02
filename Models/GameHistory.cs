@@ -5,9 +5,8 @@ namespace FYP_MusicGame_Backend.Models
         public required int Id { get; set; }
         public required int UserId { get; set; }
         public required int ChartId { get; set; }
-        public required int Score { get; set; }
+        
         public required int MaxCombo { get; set; }
-
         public required int CriticalPerfectCount { get; set; }
         public required int PerfectCount { get; set; }
         public required int GreatCount { get; set; }
