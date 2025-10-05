@@ -33,25 +33,29 @@ public class UserRepository : IUserRepository
         return await _dbContext.Users.FirstOrDefaultAsync(u => string.Equals(u.Email, email));
     }
 
-    public async Task AddUserAsync(User user)
+    public async Task<bool> AddUserAsync(User user)
     {
         _dbContext.Users.Add(user);
-        await _dbContext.SaveChangesAsync();
+        var result = await _dbContext.SaveChangesAsync();
+        return result > 0;
     }
-
-    public async Task UpdateUserAsync(User user)
+    
+    public async Task<bool> UpdateUserAsync(User user)
     {
         _dbContext.Users.Update(user);
-        await _dbContext.SaveChangesAsync();
+        var result = await _dbContext.SaveChangesAsync();
+        return result > 0;
     }
-
-    public async Task DeleteUserAsync(int id)
+    
+    public async Task<bool> DeleteUserAsync(int id)
     {
         var userToRemove = await _dbContext.Users.FindAsync(id);
         if (userToRemove != null)
         {
             _dbContext.Users.Remove(userToRemove);
-            await _dbContext.SaveChangesAsync();
+            var result = await _dbContext.SaveChangesAsync();
+            return result > 0;
         }
+        return false;
     }
 }
