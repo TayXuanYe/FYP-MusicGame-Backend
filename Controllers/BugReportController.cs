@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
 using FYP_MusicGame_Backend.Models;
 using FYP_MusicGame_Backend.Services;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace FYP_MusicGame_Backend.Controllers
@@ -16,34 +17,43 @@ namespace FYP_MusicGame_Backend.Controllers
             _bugReportService = bugReportService;
         }
 
-        // POST: api/BugReport
         [HttpPost]
-        public async Task<ActionResult<BugReportResponseDto>> ReportBug(BugReportDto bugReportDto)
+        public async Task<IActionResult> CreateBugReport([FromBody] BugReportDto bugReportDto)
         {
-            try
+            var result = await _bugReportService.CreateBugReportAsync(bugReportDto);
+
+            if (!result.IsSuccess)
             {
-                var result = await _bugReportService.CreateBugReportAsync(bugReportDto);
-                return CreatedAtAction(nameof(GetBugReport), new { id = result.ReportId }, result);
+                return BadRequest(result.ErrorMessage);
             }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
+            
+            return CreatedAtAction(nameof(GetBugReportById), new { id = result.Value.ReportId }, result.Value);
         }
 
-        // GET: api/BugReport/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BugReportResponseDto>> GetBugReport(int id)
+        public async Task<IActionResult> GetBugReportById(int id)
         {
-            try
+            var result = await _bugReportService.GetBugReportByIdAsync(id);
+            
+            if (!result.IsSuccess)
             {
-                var result = await _bugReportService.GetBugReportByIdAsync(id);
-                return result;
+                return NotFound(result.ErrorMessage);
             }
-            catch (KeyNotFoundException)
+            
+            return Ok(result.Value);
+        }
+        
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetBugReportsByUserId(int userId)
+        {
+            var result = await _bugReportService.GetBugReportsByUserIdAsync(userId);
+            
+            if (!result.IsSuccess)
             {
-                return NotFound();
+                return NotFound(result.ErrorMessage);
             }
+            
+            return Ok(result.Value);
         }
     }
 }
