@@ -13,20 +13,26 @@ public class UsersController : ControllerBase
     {
         _userService = userService;
     }
-    
+
     [HttpPut("{id}/suggested-difficulty")]
     [Authorize]
-    public async Task<IActionResult> UpdateUserSuggestedDifficulty(int id, [FromBody] string suggestedDifficulty)
+    public async Task<IActionResult> UpdateUserSuggestedDifficulty(
+        int id,
+        [FromBody] SuggestedDifficultyDto dto
+    )
     {
+        var suggestedDifficulty = dto.SuggestedDifficulty;
+
         var result = await _userService.UpdateUserSuggestedDifficultyAsync(id, suggestedDifficulty);
-        
+
         if (!result.IsSuccess)
         {
             return BadRequest(result.ErrorMessage);
         }
-        
+
         return Ok(new { message = "Difficulty Update Success" });
     }
+
     
     [HttpPut("{id}/volume-settings")]
     [Authorize]
