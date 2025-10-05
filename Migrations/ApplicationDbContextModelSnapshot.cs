@@ -39,7 +39,6 @@ namespace FYP_MusicGame_Backend.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("StepsToReproduce")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
@@ -176,6 +175,11 @@ namespace FYP_MusicGame_Backend.Migrations
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<float>("EffectVolume")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("REAL")
+                        .HasDefaultValue(1f);
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -185,8 +189,21 @@ namespace FYP_MusicGame_Backend.Migrations
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
+                    b.Property<float>("MasterVolume")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("REAL")
+                        .HasDefaultValue(1f);
+
+                    b.Property<float>("MusicVolume")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("REAL")
+                        .HasDefaultValue(1f);
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SuggestedDifficulty")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Username")
@@ -202,26 +219,6 @@ namespace FYP_MusicGame_Backend.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("FYP_MusicGame_Backend.Models.UserGameSetting", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Volume")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("UserGameSetting");
                 });
 
             modelBuilder.Entity("FYP_MusicGame_Backend.Models.BugReport", b =>
@@ -263,22 +260,6 @@ namespace FYP_MusicGame_Backend.Migrations
                     b.Navigation("Chart");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("FYP_MusicGame_Backend.Models.UserGameSetting", b =>
-                {
-                    b.HasOne("FYP_MusicGame_Backend.Models.User", "User")
-                        .WithOne("UserGameSetting")
-                        .HasForeignKey("FYP_MusicGame_Backend.Models.UserGameSetting", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("FYP_MusicGame_Backend.Models.User", b =>
-                {
-                    b.Navigation("UserGameSetting");
                 });
 #pragma warning restore 612, 618
         }
