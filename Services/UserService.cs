@@ -15,6 +15,36 @@ public class UserService : IUserService
         _userRepository = userRepository;
         _tokenService = tokenService;
     }
+    
+    public async Task<Result<bool>> UpdateUserSuggestedDifficultyAsync(int userId, string suggestedDifficulty)
+    {
+        var user = await _userRepository.GetUserByIdAsync(userId);
+        if (user == null)
+        {
+            return Result<bool>.Failure("User not found");
+        }
+        
+        user.SuggestedDifficulty = suggestedDifficulty;
+        var result = await _userRepository.UpdateUserAsync(user);
+        
+        return result ? Result<bool>.Success(true) : Result<bool>.Failure("Update Fail");
+    }
+    
+    public async Task<Result<bool>> UpdateUserVolumeSettingsAsync(int userId, float masterVolume, float effectVolume, float musicVolume)
+    {
+        var user = await _userRepository.GetUserByIdAsync(userId);
+        if (user == null)
+        {
+            return Result<bool>.Failure("User not found");
+        }
+        
+        user.MasterVolume = masterVolume;
+        user.EffectVolume = effectVolume;
+        user.MusicVolume = musicVolume;
+        var result = await _userRepository.UpdateUserAsync(user);
+        
+        return result ? Result<bool>.Success(true) : Result<bool>.Failure("Update Fail");
+    }
 
     public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
     {
@@ -24,7 +54,11 @@ public class UserService : IUserService
         {
             Id = user.Id,
             Username = user.Username,
-            Email = user.Email
+            Email = user.Email,
+            SuggestedDifficulty = user.SuggestedDifficulty,
+            MasterVolume = user.MasterVolume,
+            EffectVolume = user.EffectVolume,
+            MusicVolume = user.MusicVolume
         }).ToList();
 
         return userDtos;
@@ -43,7 +77,11 @@ public class UserService : IUserService
         {
             Id = user.Id,
             Username = user.Username,
-            Email = user.Email
+            Email = user.Email,
+            SuggestedDifficulty = user.SuggestedDifficulty,
+            MasterVolume = user.MasterVolume,
+            EffectVolume = user.EffectVolume,
+            MusicVolume = user.MusicVolume
         };
     }
 
@@ -229,7 +267,11 @@ public class UserService : IUserService
             Username = user.Username,
             Email = user.Email,
             IsLogin = true,
-            AuthToken = jwtToken
+            AuthToken = jwtToken,
+            SuggestedDifficulty = user.SuggestedDifficulty,
+            MasterVolume = user.MasterVolume,
+            EffectVolume = user.EffectVolume,
+            MusicVolume = user.MusicVolume
         };
 
         return Result<UserLoginResponseDto>.Success(userDto);
@@ -269,7 +311,11 @@ public class UserService : IUserService
             Username = user.Username,
             Email = user.Email,
             IsLogin = true,
-            AuthToken = jwtToken
+            AuthToken = jwtToken,
+            SuggestedDifficulty = user.SuggestedDifficulty,
+            MasterVolume = user.MasterVolume,
+            EffectVolume = user.EffectVolume,
+            MusicVolume = user.MusicVolume
         };
 
         return Result<UserLoginResponseDto>.Success(userDto);

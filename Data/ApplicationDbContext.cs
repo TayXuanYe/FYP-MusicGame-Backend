@@ -13,7 +13,6 @@ namespace FYP_MusicGame_Backend.Data
         public DbSet<Song> Songs { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<GameHistory> GameHistories { get; set; }
-        public DbSet<UserGameSetting> UserGameSetting { get; set; }
         public DbSet<Chart> Charts { get; set; }
         public DbSet<BugReport> BugReports { get; set; }
 
@@ -38,6 +37,18 @@ namespace FYP_MusicGame_Backend.Data
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
+                
+            modelBuilder.Entity<User>()
+                .Property(p => p.MasterVolume)
+                .HasDefaultValue(1.0f);
+                
+            modelBuilder.Entity<User>()
+                .Property(p => p.EffectVolume)
+                .HasDefaultValue(1.0f);
+                
+            modelBuilder.Entity<User>()
+                .Property(p => p.MusicVolume)
+                .HasDefaultValue(1.0f);
 
             modelBuilder.Entity<Chart>()
                 .Property(p => p.UploadedAt)
