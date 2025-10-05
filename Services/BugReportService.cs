@@ -1,27 +1,30 @@
 using FYP_MusicGame_Backend.Data;
 using FYP_MusicGame_Backend.Models;
-using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FYP_MusicGame_Backend.Services
 {
     public class BugReportService : IBugReportService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IBugReportRepository _bugReportRepository;
+        private readonly IUserRepository _userRepository;
 
-        public BugReportService(ApplicationDbContext context)
+        public BugReportService(IBugReportRepository bugReportRepository, IUserRepository userRepository)
         {
-            _context = context;
+            _bugReportRepository = bugReportRepository;
+            _userRepository = userRepository;
         }
 
-        public async Task<BugReportResponseDto> CreateBugReportAsync(BugReportDto bugReportDto)
+        public async Task<Result<BugReportResponseDto>> CreateBugReportAsync(BugReportDto bugReportDto)
         {
             // Verify user exists
-            var user = await _context.Users.FindAsync(bugReportDto.UserId);
+            var user = await _userRepository.GetUserByIdAsync(bugReportDto.UserId);
             if (user == null)
             {
-                throw new KeyNotFoundException($"User with ID {bugReportDto.UserId} not found");
+                return new Result<BugReportResponseDto>($"User with ID {bugReportDto.UserId} not found");
             }
 
             var bugReport = new BugReport
@@ -35,21 +38,33 @@ namespace FYP_MusicGame_Backend.Services
                 Status = "Pending"
             };
 
-            _context.BugReports.Add(bugReport);
-            await _context.SaveChangesAsync();
-
-            return MapToResponseDto(bugReport);
+            var createdReport = await _bugReportRepository.AddBugReportAsync(bugReport);
+            return new Result<BugReportResponseDto>(MapToResponseDto(createdReport));
         }
 
-        public async Task<BugReportResponseDto> GetBugReportByIdAsync(int id)
+        public async Task<Result<BugReportResponseDto>> GetBugReportByIdAsync(int id)
         {
-            var bugReport = await _context.BugReports.FindAsync(id);
+            var bugReport = await _bugReportRepository.GetBugReportByIdAsync(id);
             if (bugReport == null)
             {
-                throw new KeyNotFoundException($"Bug report with ID {id} not found");
+                return new Result<BugReportResponseDto>($"Bug report with ID {id} not found");
             }
 
-            return MapToResponseDto(bugReport);
+            return new Result<BugReportResponseDto>(MapToResponseDto(bugReport));
+        }
+
+        public async Task<Result<IEnumerable<BugReportResponseDto>>> GetBugReportsByUserIdAsync(int userId)
+        {
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return new Result<IEnumerable<BugReportResponseDto>>($"User with ID {userId} not found");
+            }
+
+            var bugReports = await _bugReportRepository.GetBugReportsByUserIdAsync(userId);
+            var bugReportDtos = bugReports.Select(MapToResponseDto);
+            
+            return new Result<IEnumerable<BugReportResponseDto>>(bugReportDtos);
         }
 
         private BugReportResponseDto MapToResponseDto(BugReport bugReport)
