@@ -15,7 +15,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("{id}/suggested-difficulty")]
-    [Authorize]
+    // [Authorize]
     public async Task<IActionResult> UpdateUserSuggestedDifficulty(
         int id,
         [FromBody] SuggestedDifficultyDto dto
@@ -35,7 +35,7 @@ public class UsersController : ControllerBase
 
     
     [HttpPut("{id}/volume-settings")]
-    [Authorize]
+    // [Authorize]
     public async Task<IActionResult> UpdateUserVolumeSettings(int id, [FromBody] VolumeSettingsDto volumeSettings)
     {
         var result = await _userService.UpdateUserVolumeSettingsAsync(
@@ -61,7 +61,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize]
+    // [Authorize]
     public async Task<IActionResult> GetUserById(int id)
     {
         var user = await _userService.GetUserByIdAsync(id);
@@ -73,7 +73,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("by-username/{username}")]
-    [Authorize]
+    // [Authorize]
     public async Task<IActionResult> GetUserByUsername(string username)
     {
         var user = await _userService.GetUserByUsernameAsync(username);
@@ -117,7 +117,7 @@ public class UsersController : ControllerBase
     }
     
     [HttpPut("{id}")]
-    [Authorize]
+    // [Authorize]
     public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDto userDto)
     {
         var updateResult = await _userService.UpdateUserAsync(userDto);
@@ -134,7 +134,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize]
+    // [Authorize]
     public async Task<IActionResult> DeleteUser(int id)
     {
         var deleteResult = await _userService.DeleteUserAsync(id);
