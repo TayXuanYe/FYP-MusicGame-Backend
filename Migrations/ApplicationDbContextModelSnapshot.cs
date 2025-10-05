@@ -17,6 +17,43 @@ namespace FYP_MusicGame_Backend.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
 
+            modelBuilder.Entity("FYP_MusicGame_Backend.Models.BugReport", b =>
+                {
+                    b.Property<int>("ReportId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ReportTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ReporterId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StepsToReproduce")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ReportId");
+
+                    b.HasIndex("ReporterId");
+
+                    b.ToTable("BugReports");
+                });
+
             modelBuilder.Entity("FYP_MusicGame_Backend.Models.Chart", b =>
                 {
                     b.Property<int>("Id")
@@ -88,9 +125,6 @@ namespace FYP_MusicGame_Backend.Migrations
 
                     b.Property<DateTime>("PlayedAt")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("Score")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
@@ -188,6 +222,17 @@ namespace FYP_MusicGame_Backend.Migrations
                         .IsUnique();
 
                     b.ToTable("UserGameSetting");
+                });
+
+            modelBuilder.Entity("FYP_MusicGame_Backend.Models.BugReport", b =>
+                {
+                    b.HasOne("FYP_MusicGame_Backend.Models.User", "Reporter")
+                        .WithMany()
+                        .HasForeignKey("ReporterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Reporter");
                 });
 
             modelBuilder.Entity("FYP_MusicGame_Backend.Models.Chart", b =>
