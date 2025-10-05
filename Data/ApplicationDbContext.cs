@@ -15,6 +15,7 @@ namespace FYP_MusicGame_Backend.Data
         public DbSet<GameHistory> GameHistories { get; set; }
         public DbSet<UserGameSetting> UserGameSetting { get; set; }
         public DbSet<Chart> Charts { get; set; }
+        public DbSet<BugReport> BugReports { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
