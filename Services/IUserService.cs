@@ -12,4 +12,6 @@ public interface IUserService
     Task<Result<bool>> DeleteUserAsync(int id);
     Task<Result<UserLoginResponseDto>> AuthenticateUserAsync(string username, string password);
     Task<Result<UserLoginResponseDto>> AuthenticateAdminAsync(string username, string password);
+    Task<Result<bool>> UpdateUserSuggestedDifficultyAsync(int userId, string suggestedDifficulty);
+    Task<Result<bool>> UpdateUserVolumeSettingsAsync(int userId, float masterVolume, float effectVolume, float musicVolume);
 }
