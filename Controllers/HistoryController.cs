@@ -32,14 +32,15 @@ namespace FYP_MusicGame_Backend.Controllers
         }
 
         [HttpPost("analyze")]
-        public async Task<ActionResult<List<HistoryDto>>> AnalyzeGameData([FromBody] GameDataAnalysisRequest request)
+        public async Task<ActionResult<List<HistoryDto>>> AnalyzeGameData([FromBody] List<PerChartAnalysisRequest> requests)
         {
-            if (request == null || request.UserRawInputData == null || request.UserRawGazeData == null)
+            if (requests == null || requests.Count == 0)
             {
-                return BadRequest(new { message = "Invalid request data" });
+                return BadRequest(new { message = "Invalid request data: request list is empty" });
             }
 
-            var results = await _historyService.AnalyzeGameDataAsync(request);
+            var results = await _historyService.AnalyzeGameDataAsync(requests);
+
             return Ok(results);
         }
     }

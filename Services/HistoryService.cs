@@ -28,7 +28,7 @@ namespace FYP_MusicGame_Backend.Services
             return MapToHistoryDto(history);
         }
 
-        public async Task<List<HistoryDto>> AnalyzeGameDataAsync(GameDataAnalysisRequest request)
+        public async Task<List<HistoryDto>> AnalyzeGameDataAsync(List<PerChartAnalysisRequest> requests)
         {
             // 这里是占位符，之后会实现分析逻辑
             // 目前只返回一个空列表
