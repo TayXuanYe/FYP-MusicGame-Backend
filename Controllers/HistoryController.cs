@@ -34,7 +34,7 @@ namespace FYP_MusicGame_Backend.Controllers
         [HttpPost("analyze")]
         public async Task<ActionResult<List<HistoryDto>>> AnalyzeGameData([FromBody] GameDataAnalysisRequest request)
         {
-            if (request == null || request.DataList1 == null || request.DataList2 == null)
+            if (request == null || request.UserRawInputData == null || request.UserRawGazeData == null)
             {
                 return BadRequest(new { message = "Invalid request data" });
             }

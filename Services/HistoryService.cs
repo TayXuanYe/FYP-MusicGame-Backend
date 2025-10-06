@@ -22,7 +22,7 @@ namespace FYP_MusicGame_Backend.Services
 
             if (history == null)
             {
-                return null;
+                return new HistoryDto();
             }
 
             return MapToHistoryDto(history);

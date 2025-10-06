@@ -12,7 +12,7 @@ namespace FYP_MusicGame_Backend.Services
 
     public class GameDataAnalysisRequest
     {
-        public List<object> DataList1 { get; set; } = new List<object>();
-        public List<object> DataList2 { get; set; } = new List<object>();
+        public List<object> UserRawInputData { get; set; } = new List<object>();
+        public List<object> UserRawGazeData { get; set; } = new List<object>();
     }
 }
