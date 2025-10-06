@@ -43,10 +43,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBugReportRepository, BugReportRepository>();
+builder.Services.AddScoped<IHistoryRepository, HistoryRepository>();
 
 // Register services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBugReportService, BugReportService>();
+builder.Services.AddScoped<IHistoryService, HistoryService>();
 
 // Add controllers services
 builder.Services.AddControllers();
