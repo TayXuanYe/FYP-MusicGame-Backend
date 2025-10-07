@@ -3,6 +3,7 @@ using System;
 using FYP_MusicGame_Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FYP_MusicGame_Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251006125447_UpdateGameHistoryTable")]
+    partial class UpdateGameHistoryTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
@@ -104,6 +107,9 @@ namespace FYP_MusicGame_Backend.Migrations
                     b.Property<float>("FinalAttention")
                         .HasColumnType("REAL");
 
+                    b.Property<int?>("HistoryId")
+                        .HasColumnType("INTEGER");
+
                     b.PrimitiveCollection<string>("HitTimings")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -145,9 +151,6 @@ namespace FYP_MusicGame_Backend.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("TapPerfectCount")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("TrackNo")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("UserId")
