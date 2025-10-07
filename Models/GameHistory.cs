@@ -4,10 +4,9 @@ namespace FYP_MusicGame_Backend.Models
 {
     public class GameHistory
     {
-        public required int Id { get; set; }
+        public int Id { get; set; }
         public required int UserId { get; set; }
         public required int ChartId { get; set; }
-        public int? HistoryId { get; set; }
         
         public required int Score { get; set; }
         public required int MaxCombo { get; set; }
