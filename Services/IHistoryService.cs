@@ -12,14 +12,17 @@ namespace FYP_MusicGame_Backend.Services
 
     public class PerChartAnalysisRequest
     {
+        [System.Text.Json.Serialization.JsonPropertyName("user_id")]
+        public int UserId { get; set; }
+
         [System.Text.Json.Serialization.JsonPropertyName("chart_id")]
         public int ChartId { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("user_input_data")]
-        public List<string>? UserInputData { get; set; }
+        public List<UserNoteProcessResultDto>? UserInputData { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("user_gaze_data")]
-        public List<string>? UserGazeData { get; set; }
+        public List<GazeDataDto>? UserGazeData { get; set; }
     }
         
 }
