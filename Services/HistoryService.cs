@@ -55,7 +55,6 @@ namespace FYP_MusicGame_Backend.Services
                     double totalSimulateScore = 0;
                     int totalSimulateCount = 0;
                     List<double> timeDifferences = new List<double>();
-                    double averageAttention = 0;
 
                     int tapCriticalPerfectCount = 0;
                     int tapPerfectCount = 0;
@@ -199,7 +198,8 @@ namespace FYP_MusicGame_Backend.Services
                         HoldGreatCount = holdGreatCount,
                         HoldGoodCount = holdGoodCount,
                         HoldMissCount = holdMissCount,
-                        HitTimings = timeDifferences
+                        HitTimings = timeDifferences,
+                        TrackNo = request.TrackNo
                     };
 
                     await _historyRepository.CreateHistoryAsync(history);
@@ -248,7 +248,9 @@ namespace FYP_MusicGame_Backend.Services
                 HoldGreatCount = history.HoldGreatCount,
                 HoldGoodCount = history.HoldGoodCount,
                 HoldMissCount = history.HoldMissCount,
-                HitTimings = history.HitTimings
+                HitTimings = history.HitTimings,
+                RecordTime = history.PlayedAt,
+                TrackNo = history.TrackNo
             };
         }
     }

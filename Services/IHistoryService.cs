@@ -19,6 +19,9 @@ namespace FYP_MusicGame_Backend.Services
         [System.Text.Json.Serialization.JsonPropertyName("chart_id")]
         public int ChartId { get; set; }
 
+        [System.Text.Json.Serialization.JsonPropertyName("track_no")]
+        public int TrackNo { get; set; }
+
         [System.Text.Json.Serialization.JsonPropertyName("user_input_data")]
         public List<UserNoteProcessResultDto>? UserInputData { get; set; }
 
