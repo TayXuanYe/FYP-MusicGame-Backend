@@ -22,7 +22,7 @@ namespace FYP_MusicGame_Backend.Controllers
         public async Task<ActionResult<HistoryDto>> GetHistoryById(int historyId)
         {
             var history = await _historyService.GetHistoryByIdAsync(historyId);
-            
+
             if (history == null)
             {
                 return NotFound(new { message = "History not found" });
@@ -42,6 +42,19 @@ namespace FYP_MusicGame_Backend.Controllers
             var results = await _historyService.AnalyzeGameDataAsync(requests);
 
             return Ok(results);
+        }
+        
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<List<HistoryDto>>> GetHistoryByUserId(int userId)
+        {
+            var histories = await _historyService.GetHistoryByUserIdAsync(userId);
+
+            if (histories == null || histories.Count == 0)
+            {
+                return NotFound(new { message = "No history found for the user" });
+            }
+
+            return Ok(histories);
         }
     }
 }

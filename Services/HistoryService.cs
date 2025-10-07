@@ -215,6 +215,18 @@ namespace FYP_MusicGame_Backend.Services
             return histories;
         }
 
+        public async Task<List<HistoryDto>> GetHistoryByUserIdAsync(int userId)
+        {
+            var histories = await _historyRepository.GetHistoriesByUserIdAsync(userId);
+
+            if (histories == null || histories.Count == 0)
+            {
+                return new List<HistoryDto>();
+            }
+
+            return histories.Select(MapToHistoryDto).ToList();
+        }
+
         private HistoryDto MapToHistoryDto(GameHistory history)
         {
             return new HistoryDto

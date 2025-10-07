@@ -8,6 +8,7 @@ namespace FYP_MusicGame_Backend.Services
     {
         Task<HistoryDto> GetHistoryByIdAsync(int historyId);
         Task<List<HistoryDto>> AnalyzeGameDataAsync(List<PerChartAnalysisRequest> requests);
+        Task<List<HistoryDto>> GetHistoryByUserIdAsync(int userId);
     }
 
     public class PerChartAnalysisRequest
