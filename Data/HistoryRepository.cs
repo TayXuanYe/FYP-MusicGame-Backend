@@ -18,7 +18,7 @@ namespace FYP_MusicGame_Backend.Data
         public async Task<GameHistory> GetHistoryByIdAsync(int historyId)
         {
             return await _context.GameHistories
-                .FirstOrDefaultAsync(h => h.HistoryId == historyId);
+                .FirstOrDefaultAsync(h => h.Id == historyId);
         }
 
         public async Task<List<GameHistory>> GetHistoriesByUserIdAsync(int userId)
