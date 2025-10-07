@@ -10,7 +10,7 @@ public class UserNoteProcessResultDto
     public double DurationTime { get; set; } // Only for Hold notes
     public double HoldTotalTime { get; set; } // Only for Hold notes
     public double HoldTimeRatio => DurationTime > 0 ? HoldTotalTime / DurationTime : 0; // Only for Hold notes
-    protected UserNoteProcessResultDto() { }
+    public UserNoteProcessResultDto() { }
     public static UserNoteProcessResultDto CreateTapNoteResult(int laneIndex, string hitResult, double hitTime, double timeDifference, double targetHitTime, double systemTime)
     {
         return new UserNoteProcessResultDto
