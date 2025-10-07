@@ -20,16 +20,16 @@ namespace FYP_MusicGame_Backend.Services
             _chartRepository = chartRepository;
         }
 
-        public async Task<HistoryDto> GetHistoryByIdAsync(int historyId)
+        public async Task<List<HistoryDto>> GetHistoryByIdAsync(int historyId)
         {
             var history = await _historyRepository.GetHistoryByIdAsync(historyId);
 
             if (history == null)
             {
-                return new HistoryDto();
+                return new List<HistoryDto>();
             }
 
-            return MapToHistoryDto(history);
+            return new List<HistoryDto> { MapToHistoryDto(history) };
         }
 
         public async Task<List<HistoryDto>> AnalyzeGameDataAsync(List<PerChartAnalysisRequest> requests)

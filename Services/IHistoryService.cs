@@ -6,7 +6,7 @@ namespace FYP_MusicGame_Backend.Services
 {
     public interface IHistoryService
     {
-        Task<HistoryDto> GetHistoryByIdAsync(int historyId);
+        Task<List<HistoryDto>> GetHistoryByIdAsync(int historyId);
         Task<List<HistoryDto>> AnalyzeGameDataAsync(List<PerChartAnalysisRequest> requests);
         Task<List<HistoryDto>> GetHistoryByUserIdAsync(int userId);
     }
