@@ -28,6 +28,8 @@ namespace FYP_MusicGame_Backend.Models
         public List<double> HitTimings { get; set; } = new List<double>();
 
         public required DateTime PlayedAt { get; set; }
+        public required int TrackNo { get; set; }
+
 
         public required User User { get; set; }
         public required Chart Chart { get; set; }

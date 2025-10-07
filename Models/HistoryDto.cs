@@ -25,5 +25,7 @@ namespace FYP_MusicGame_Backend.Models
         public int HoldMissCount { get; set; }
 
         public List<double> HitTimings { get; set; } = new List<double>();
+        public DateTime RecordTime { get; set; }
+        public int TrackNo { get; set; }
     }
 }
